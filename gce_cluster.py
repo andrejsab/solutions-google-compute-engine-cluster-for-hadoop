@@ -125,6 +125,7 @@ class GceCluster(object):
 
     self.zone = getattr(self.flags, 'zone', None) or self.DEFAULT_ZONE
     self.data_disk_size_gb = getattr(self.flags, 'data_disk_gb', 0)
+    self.DiskType = getattr(self.flags, 'diskType', 0)
     if self.data_disk_size_gb <= 0:
       self.data_disk_size_gb = self.DEFAULT_DATA_DISK_SIZE_GB
     self.startup_script = None
@@ -196,7 +197,7 @@ class GceCluster(object):
     # If the boot disk doesn't already exist, create.
     if not self._GetApi().GetDisk(boot_disk_name):
       image = self.flags.image or self.DEFAULT_IMAGE
-      if not self._GetApi().CreateDisk(boot_disk_name, image=image):
+      if not self._GetApi().CreateDisk(boot_disk_name, image=image,type=self.DiskType):
         raise ClusterSetUpError(
             'Failed to create boot disk: %s' % boot_disk_name)
       self._WaitForDiskReady(boot_disk_name)
@@ -204,7 +205,7 @@ class GceCluster(object):
     # If the data disk doesn't already exist, create.
     if not self._GetApi().GetDisk(data_disk_name):
       if not self._GetApi().CreateDisk(data_disk_name,
-                                       size_gb=self.data_disk_size_gb):
+                                        size_gb=self.data_disk_size_gb,type=self.DiskType):
         raise ClusterSetUpError(
             'Failed to create data disk: %s' % data_disk_name)
       self._WaitForDiskReady(data_disk_name)
