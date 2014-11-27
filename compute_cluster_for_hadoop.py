@@ -21,7 +21,7 @@ import argparse
 import logging
 import re
 import sys
-
+import gflags
 import oauth2client
 
 import gce_cluster
@@ -57,8 +57,8 @@ class ComputeClusterForHadoop(object):
     # terminal such as ssh.
     class SetNoAuthLocalWebserverAction(argparse.Action):
       def __call__(self, parser, namespace, values, option_string=None):
-        oauth2client.tools.gflags.FLAGS.auth_local_webserver = False
-
+        #oauth2client.tools.gflags.FLAGS.auth_local_webserver = False
+        gflags.FLAGS.auth_local_webserver = False
     self._parser.add_argument(
         '--noauth_local_webserver', nargs=0,
         action=SetNoAuthLocalWebserverAction,
@@ -115,6 +115,9 @@ class ComputeClusterForHadoop(object):
     parser_start.add_argument(
         '--data-disk-gb', default=0, type=int,
         help='Size of persistent disk for data per instance in GB.')
+    parser_start.add_argument(
+        '--diskType', default='pesristent',
+        help='Type of disk persistent/ssd.')  
     parser_start.add_argument(
         '--command', default='',
         help='Additional command to run on each instance.')
