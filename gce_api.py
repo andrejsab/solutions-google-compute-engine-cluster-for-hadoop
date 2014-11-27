@@ -354,11 +354,20 @@ class GceApi(object):
     Returns:
       Boolean to indicate whether the disk creation was successful.
     """
-    params = {
+    """params = {
         'kind': 'compute#disk',
         'sizeGb': '%d' % size_gb,
         'name': disk_name,
     }
+    """
+    #Create disk using SSD disks
+    params = {
+        'kind': 'compute#disk',
+        'sizeGb': '%d' % size_gb,
+        'name': disk_name,
+        'type': 'https://www.googleapis.com/compute/v1/projects/'+self._project+'/zones/'+self._zone+'/diskTypes/pd-ssd'
+    }
+
     source_image = self._ResourceUrlFromPath(image) if image else None
     operation = self.GetApi().disks().insert(
         project=self._project, zone=self._zone, body=params,
