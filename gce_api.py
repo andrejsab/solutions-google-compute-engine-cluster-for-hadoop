@@ -343,7 +343,7 @@ class GceApi(object):
         project=self._project, zone=self._zone, filter=filter_string).execute()
     return result.get('items', [])
 
-  def CreateDisk(self, disk_name, size_gb=10, image=None):
+  def CreateDisk(self, disk_name, size_gb=10, image=None ,type='persistent'):
     """Creates persistent disk in the zone of this API.
 
     Args:
@@ -354,19 +354,20 @@ class GceApi(object):
     Returns:
       Boolean to indicate whether the disk creation was successful.
     """
-    """params = {
-        'kind': 'compute#disk',
-        'sizeGb': '%d' % size_gb,
-        'name': disk_name,
-    }
-    """
-    #Create disk using SSD disks
-    params = {
+    if type=='ssd':
+      params = {
         'kind': 'compute#disk',
         'sizeGb': '%d' % size_gb,
         'name': disk_name,
         'type': 'https://www.googleapis.com/compute/v1/projects/'+self._project+'/zones/'+self._zone+'/diskTypes/pd-ssd'
-    }
+      }
+    else:
+      params = {
+        'kind': 'compute#disk',
+        'sizeGb': '%d' % size_gb,
+        'name': disk_name,
+      }
+ 
 
     source_image = self._ResourceUrlFromPath(image) if image else None
     operation = self.GetApi().disks().insert(
