@@ -379,13 +379,16 @@ of the number of workers is 5.
 
     ./compute_cluster_for_hadoop.py start <project ID> <bucket name>  \
         [number of workers] [--prefix <prefix>]  \
-        [--data-disk-gb <size>]
+        [--data-disk-gb <size>] [--diskType <ssd or persistent(default)>]
 
 Each instance is started with a Persistent Disk used for HDFS.  The size of the
 disk can be set with the `--data-disk-gb` parameter.  The default size is 500GB.
 Review the [documentation](https://developers.google.com/compute/docs/disks)
 for help in determining the disk size that provides the right performance
 for the cluster.
+
+Type of the disk can be set with the `--diskType` parameter. 
+The default is persistent, but it can be set to ssd.
 
 If the instance is started for the first time, the script requires log in
 and asks for authorization to access Google Compute Engine.
@@ -397,7 +400,7 @@ by the message as follows.
 
     ./compute_cluster_for_hadoop.py --noauth_local_webserver start  \
         <project ID> <bucket name> [number of workers]  \
-        [--prefix <prefix>] [--data-disk-gb <size>]
+        [--prefix <prefix>] [--data-disk-gb <size>] [--diskType <ssd or persistent(default)>]
 
 It avoids the attempt to open local Web browser, and it shows URL for
 authentication and authorization.
